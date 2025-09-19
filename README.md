@@ -37,49 +37,52 @@
 
 ### 方法二：通过可执行文件运行
 
-1. 双击运行 `ADIFConvert.exe` 即可
+1. 双击运行 `ADIFConvert.exe` 
 
-2. 使用命令行查看脚本帮助：
+2. **或**使用命令行
+
+   1. 查看脚本帮助：
 
    ```bash
    ./ADIFConvert_V0.1.exe -h
    ```
 
-3. 使用命令行运行脚本
+   2. 使用命令行运行脚本
 
    ```bash
    ./ADIFConvert_V0.1.exe
    ```
 
+
 ### 自定义参数
 
-```plaintext
+```bash
 python main.py -i [输入Excel文件路径] -o [输出ADIF文件路径]
-./ADIFConvert_V0.1.exe -i [输入Excel文件路径] -o [输出ADIF文件路径]
+./ADIFConvert_V0.2.exe -i [输入Excel文件路径] -o [输出ADIF文件路径]
 ```
 
 如果不指定参数，默认会：
 
-- 读取 `用户下载文件夹/(日志)表格视图.xlsx`
-- 输出到 `用户下载文件夹/tqsl.adi`
+- 读取当前文件夹的 `(日志)表格视图.xlsx`
+- 输出到当前文件夹 `tqsl.adi`
 
 ## 支持的字段映射
 
 工具会将表格中的以下字段转换为 ADIF 标准字段：
 
-| 表格字段   | ADIF 字段    |
-|--------|------------|
+| 表格字段 | ADIF 字段  |
+| -------- | ---------- |
 | 呼号     | CALL       |
 | 模式     | MODE       |
-| 对方信号   | RST_RCVD   |
-| 己方信号   | RST_SENT   |
-| 对方设备   | RIG        |
-| 对方天馈   | ANTENNA    |
-| 对方功率   | RX_PWR     |
+| 对方信号 | RST_RCVD   |
+| 己方信号 | RST_SENT   |
+| 对方设备 | RIG        |
+| 对方天馈 | ANTENNA    |
+| 对方功率 | RX_PWR     |
 | 对方 QTH | QTH        |
-| 己方设备   | MY_RIG     |
-| 己方天馈   | MY_ANTENNA |
-| 己方功率   | TX_PWR     |
+| 己方设备 | MY_RIG     |
+| 己方天馈 | MY_ANTENNA |
+| 己方功率 | TX_PWR     |
 | 己方 QTH | MY_CITY    |
 | 补充     | COMMENTS   |
 

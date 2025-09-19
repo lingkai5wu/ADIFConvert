@@ -15,8 +15,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # 常量定义
-DEFAULT_INPUT_PATH = Path.home() / "Downloads/(日志)表格视图.xlsx"
-DEFAULT_OUTPUT_PATH = Path.home() / "Downloads/tqsl.adi"
+DEFAULT_INPUT_PATH = Path.cwd() / "(日志)表格视图.xlsx"
+DEFAULT_OUTPUT_PATH = Path.cwd() / "tqsl.adi"
 LOCAL_TIMEZONE = timezone(timedelta(hours=8))
 
 # 字段映射
@@ -144,16 +144,6 @@ def generate_adif(worksheet) -> str:
 
 
 def main():
-    # 解析命令行参数
-    parser = argparse.ArgumentParser(description='将Excel日志转换为ADIF格式')
-    parser.add_argument('-i', '--input', type=str, help=f'输入Excel文件路径，默认: {DEFAULT_INPUT_PATH}')
-    parser.add_argument('-o', '--output', type=str, help=f'输出ADIF文件路径，默认: {DEFAULT_OUTPUT_PATH}')
-    args = parser.parse_args()
-
-    # 确定输入输出路径
-    input_path = Path(args.input) if args.input else DEFAULT_INPUT_PATH
-    output_path = Path(args.output) if args.output else DEFAULT_OUTPUT_PATH
-
     logger.info(f"输入文件: {input_path}, 输出文件: {output_path}")
 
     try:
@@ -175,9 +165,51 @@ def main():
         logger.info(f"成功生成ADIF文件: {output_path}")
 
     except Exception as e:
-        logger.error(f"处理过程中出错: {e}", exc_info=True)
+        logger.error(e, exc_info=True)
         raise SystemExit(1)
 
 
+def get_user_confirmation(prompt, message=None, details=None, default_confirm=False):
+    """ 获取用户确认的通用函数"""
+    # 打印主要信息
+    if message:
+        print(message)
+    # 如果有详细信息，逐条打印
+    if details:
+        for item in details:
+            print(item)
+    # 根据默认选择设置提示信息
+    prompt += "[Y/n]" if default_confirm else "[y/N]"
+
+    while True:
+        response = input(prompt).strip().lower()
+        # 处理空输入（使用默认选择）
+        if response == '':
+            return default_confirm
+        # 确认选项
+        if response in ['y', 'yes', '是']:
+            return True
+        # 拒绝选项
+        if response in ['n', 'no', '否']:
+            return False
+        # 无效输入
+        print("输入无效，请重新输入")
+
+
 if __name__ == "__main__":
-    main()
+    # 解析命令行参数
+    parser = argparse.ArgumentParser(description='将Excel日志转换为ADIF格式')
+    parser.add_argument('-i', '--input', type=str, help=f'输入Excel文件路径，默认: {DEFAULT_INPUT_PATH}')
+    parser.add_argument('-o', '--output', type=str, help=f'输出ADIF文件路径，默认: {DEFAULT_OUTPUT_PATH}')
+    args = parser.parse_args()
+
+    # 确定输入输出路径
+    input_path = Path(args.input) if args.input else DEFAULT_INPUT_PATH
+    output_path = Path(args.output) if args.output else DEFAULT_OUTPUT_PATH
+
+    while True:
+        main()
+        if not get_user_confirmation('是否再次运行？'):
+            break
+
+# pyinstaller -F -n "ADIFConvert_V0.2" .\main.py
